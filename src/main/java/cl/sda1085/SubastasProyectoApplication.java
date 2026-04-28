@@ -1,4 +1,4 @@
-package com.cl.sda1085.subastas_proyecto;
+package cl.sda1085;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
