@@ -1,13 +1,13 @@
-package cl.sda1085;
+package cl.sda1085.subastas;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class SubastasProyectoApplication {
+public class SubastasApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(SubastasProyectoApplication.class, args);
+		SpringApplication.run(SubastasApplication.class, args);
 	}
 
 }

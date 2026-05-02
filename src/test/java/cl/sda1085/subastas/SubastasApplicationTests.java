@@ -1,10 +1,10 @@
-package cl.sda1085;
+package cl.sda1085.subastas;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class SubastasProyectoApplicationTests {
+class SubastasApplicationTests {
 
 	@Test
 	void contextLoads() {
