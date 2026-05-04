@@ -1,9 +1,6 @@
 package cl.sda1085.subastas.dto;
 
-import jakarta.validation.constraints.DecimalMin;
-import jakarta.validation.constraints.Future;
-import jakarta.validation.constraints.FutureOrPresent;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -37,4 +34,8 @@ public class SubastaRequestDTO {
     @NotNull(message = "La fecha de término es obligatoria.")
     @Future(message = "La fecha de término debe ser una fecha futura.")
     private LocalDateTime fechaTermino;
+
+
+    @NotBlank(message = "El estado no debe estar vacío.")
+    private String estado;
 }
