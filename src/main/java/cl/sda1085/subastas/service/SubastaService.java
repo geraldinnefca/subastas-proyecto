@@ -12,11 +12,4 @@ public class SubastaService {
 
     private final SubastaRepository subastaRepository;
 
-    //Método de apoyo para encapsulamiento de datos
-    private SubastaResponseDTO mapToResponseDTO(Subasta subasta){
-        return new SubastaResponseDTO(
-                subasta.getId(),
-                sub
-        );
-    }
 }

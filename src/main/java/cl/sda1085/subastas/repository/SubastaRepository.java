@@ -9,6 +9,7 @@ import java.util.Optional;
 
 public interface SubastaRepository extends JpaRepository<Subasta, Long> {
 
+    //CRUD personalizado
     //Buscar subastas activas por su estado
     List<Subasta> findByEstado(String estado);
 
