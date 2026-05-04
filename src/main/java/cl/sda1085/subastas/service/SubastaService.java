@@ -4,9 +4,12 @@ import cl.sda1085.subastas.dto.SubastaRequestDTO;
 import cl.sda1085.subastas.dto.SubastaResponseDTO;
 import cl.sda1085.subastas.model.Subasta;
 import cl.sda1085.subastas.repository.SubastaRepository;
+import jakarta.persistence.metamodel.SingularAttribute;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.jpa.domain.AbstractPersistable;
 import org.springframework.stereotype.Service;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -57,7 +60,7 @@ public class SubastaService {
     }
 
     //Obtener por ID
-    public Optional<SubastaResponseDTO> obtenerPorId(Long id){  //'Optional' permite contener un objeto que puede o no ser nulo
+    public Optional<SubastaResponseDTO> obtenerPorId(SingularAttribute<AbstractPersistable, Serializable> id){  //'Optional' permite contener un objeto que puede o no ser nulo
         return subastaRepository.findById(id).map(this::mapToDTO);
     }
 
