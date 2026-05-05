@@ -35,7 +35,6 @@ public class SubastaRequestDTO {
     @Future(message = "La fecha de término debe ser una fecha futura.")
     private LocalDateTime fechaTermino;
 
-
     @NotBlank(message = "El estado no debe estar vacío.")
     private String estado;
 }

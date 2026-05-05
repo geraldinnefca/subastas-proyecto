@@ -23,5 +23,5 @@ public class SubastaResponseDTO {
     private LocalDateTime fechaInicio;
     private LocalDateTime fechaTermino;
     private String estado;
-    private Long idGenerador;  //Se llena al finalizar la subasta
+    private Long idGanador;  //Se llena al finalizar la subasta
 }

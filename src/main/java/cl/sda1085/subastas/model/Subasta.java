@@ -39,5 +39,6 @@ public class Subasta {
     @Column(nullable = false)
     private String estado;  //Programada, abierta, cerrada o cancelada
 
+    @Column(nullable = true)
     private Long idGanador;  //Al final, guardará quién ganó para que el microservicio 'pagos' lo use
 }
