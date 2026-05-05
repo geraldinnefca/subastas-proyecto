@@ -6,6 +6,7 @@ import cl.sda1085.subastas.model.Subasta;
 import cl.sda1085.subastas.repository.SubastaRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -130,4 +131,28 @@ public class SubastaService {
     public boolean productoYaTieneSubasta(Long idProducto){
         return subastaRepository.existsByIdProducto(idProducto);
     }
+
+
+    //Tarea programada (ejecución cada un minuto) que busca subastas abiertas cuya fecha de término ya pasó y las cierra
+    @Scheduled(fixedRate = 60000) //Scheduled indica que el metodo debe ejecutarse automaticamente contando desde el inicio de la última ejecución, fixedRate es el tiempo en milisegundos
+    public void cerrarSubastasVencidas(){
+        LocalDateTime fechaInicio = LocalDateTime.now();
+        log.info("Ejecutando revisión de subastas vencidas a las {}", fechaInicio);
+
+        //Buscar las subastas que deberían haber terminado
+        List<Subasta> vencidas = subastaRepository.findByFechaTerminoBefore(fechaInicio);
+        for (Subasta subasta : vencidas) {
+            //Sólo cierra las que aún figuran como estado abiertas o programadas
+            if (!subasta.getEstado().equals("CERRADA")) {
+                subasta.setEstado("CERRADA");
+                subastaRepository.save(subasta);
+                log.info("Subasta ID {} marcada como CERRADA por vencimiento", subasta.getId());
+            }
+
+        }
+
+
+    }
+
+
 }
