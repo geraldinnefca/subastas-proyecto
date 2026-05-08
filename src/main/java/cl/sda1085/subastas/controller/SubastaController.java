@@ -15,8 +15,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/subastas")
-
+@RequestMapping("/api/subastas")
 public class SubastaController {
 
     private final SubastaService subastaService;
@@ -115,5 +114,12 @@ public class SubastaController {
     @GetMapping("/verificar/producto/{idProducto}/registrado")
     public ResponseEntity<Boolean> verificarProductoRegistrado(@PathVariable Long idProducto) {
         return ResponseEntity.ok(subastaService.productoYaTieneSubasta(idProducto));
+    }
+
+    //Llama a la lógica que consulta al microservicio de Productos
+    //Ruta: POST /api/subastas/registrar
+    @PostMapping("/registrar")
+    public ResponseEntity<SubastaResponseDTO> registrarSubasta(@Valid @RequestBody SubastaRequestDTO dto){
+        return ResponseEntity.status(201).body(subastaService.registrarSubasta(dto));
     }
 }

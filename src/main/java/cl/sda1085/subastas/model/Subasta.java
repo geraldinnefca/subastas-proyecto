@@ -21,7 +21,7 @@ public class Subasta {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, updatable = true)
     private Long idProducto;  //Relacionado con microservicio 'productos'
 
     @Column(nullable = false)
@@ -36,7 +36,7 @@ public class Subasta {
     @Column(nullable = false)
     private LocalDateTime fechaTermino;
 
-    @Column(nullable = false)
+    @Column(nullable = false, updatable = true)
     private String estado;  //Programada, abierta, cerrada o cancelada
 
     @Column(nullable = true)

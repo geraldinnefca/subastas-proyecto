@@ -4,6 +4,7 @@ import cl.sda1085.subastas.dto.SubastaRequestDTO;
 import cl.sda1085.subastas.dto.SubastaResponseDTO;
 import cl.sda1085.subastas.model.Subasta;
 import cl.sda1085.subastas.repository.SubastaRepository;
+import cl.sda1085.subastas.webclient.ProductoClient;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -20,6 +22,7 @@ import java.util.stream.Collectors;
 public class SubastaService {
 
     private final SubastaRepository subastaRepository;
+    private final ProductoClient productoClient;
 
     //Método de apoyo para encapsulamiento de datos
     private SubastaResponseDTO mapToResponseDTO(Subasta subasta){
@@ -33,6 +36,19 @@ public class SubastaService {
                 subasta.getEstado(),
                 subasta.getIdGanador()
         );
+    }
+
+    //Método que convierte 'DTO' en una entidad
+    private Subasta mapToEntity(SubastaRequestDTO dto) {
+        Subasta subasta = new Subasta();
+        subasta.setIdProducto(dto.getIdProducto());
+        subasta.setIdVendedor(dto.getIdVendedor());
+        subasta.setPrecioBase(dto.getPrecioBase());
+        subasta.setFechaInicio(dto.getFechaInicio());
+        subasta.setFechaTermino(dto.getFechaTermino());
+        subasta.setEstado("PROGRAMADA");
+
+        return subasta;
     }
 
     //Obtener todas las subastas
@@ -72,12 +88,15 @@ public class SubastaService {
     //Actualizar subasta
     public Optional<SubastaResponseDTO> actualizar(Long id, SubastaRequestDTO dto){
         return subastaRepository.findById(id).map(subastaExistente -> {
+            subastaExistente.setIdProducto(dto.getIdProducto());
+            subastaExistente.setIdVendedor(dto.getIdVendedor());
             subastaExistente.setPrecioBase(dto.getPrecioBase());
             subastaExistente.setFechaInicio(dto.getFechaInicio());
             subastaExistente.setFechaTermino(dto.getFechaTermino());
+            subastaExistente.setEstado(dto.getEstado());
 
-            //El estado podría cambiar aquí si se cancela o se abre manualmente
-            return mapToResponseDTO(subastaRepository.save(subastaExistente));
+            Subasta subastaActualizada = subastaRepository.save(subastaExistente);
+            return mapToResponseDTO(subastaActualizada);
         });
     }
 
@@ -148,11 +167,24 @@ public class SubastaService {
                 subastaRepository.save(subasta);
                 log.info("Subasta ID {} marcada como CERRADA por vencimiento", subasta.getId());
             }
-
         }
-
-
     }
 
+    //Registra subasta a partir de WebClient
+    public SubastaResponseDTO registrarSubasta(SubastaRequestDTO dto){
 
+        if (dto.getFechaInicio().isAfter(dto.getFechaTermino())){  //Validación de fechas
+            throw new RuntimeException("La fecha de inicio no puede ser posterior a la fecha de término.");
+        }
+
+        productoClient.obtenerProductoPorId(dto.getIdProducto());  //Validación de producto (WebClient)
+        Subasta subasta = mapToEntity(dto);  //Mapeo y persistencia
+
+        if (subasta.getEstado() == null){
+            subasta.setEstado("PROGRAMADA");  //Asegurar el estado por defecto
+        }
+
+        Subasta subastaGuardada = subastaRepository.save(subasta);  //Guardar y responder
+        return mapToResponseDTO(subastaGuardada);
+    }
 }
